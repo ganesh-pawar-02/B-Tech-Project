@@ -24,11 +24,11 @@ function Home() {
     
     <Layout>
 
-      <div className="flex">
+      {/* <div className="flex">
         <button className='bg-gray-300 p-5' onClick={()=>addCart()}>add</button>
         <button className='bg-gray-300 p-5' onClick={()=>deleteCart()}>del</button>
 
-      </div>
+      </div> */}
       <HeroSection/>
       <Filter/>
       <ProductCard/>
