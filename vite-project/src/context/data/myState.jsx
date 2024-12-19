@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import MyContext from './myContext';
-import { fireDb } from '../../firebase/FirebaseConfig';
+import { fireDB } from '../../firebase/FirebaseConfig';
+// import {fireDB} from '../../firebase/FirsbaseConfig'
 import { Timestamp, addDoc, collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 
@@ -43,11 +44,14 @@ function MyState(props) {
     if (products.title == null || products.price == null || products.imageUrl == null || products.category == null || products.description == null) {
       return toast.error('Please fill all fields')
     }
-    const productRef = collection(fireDb, "products")
+    const productRef = collection(fireDB, "products")
     setLoading(true)
     try {
       await addDoc(productRef, products)
       toast.success("Product Add successfully")
+      setTimeout(()=>{
+        window.location.href='/dashboard'
+      },800)
       getProductData()
       closeModal()
       setLoading(false)
@@ -65,7 +69,7 @@ function MyState(props) {
     setLoading(true)
     try {
       const q = query(
-        collection(fireDb, "products"),
+        collection(fireDB, "products"),
         orderBy("time"),
         // limit(5)
       );
@@ -88,6 +92,41 @@ function MyState(props) {
     getProductData();
   }, []);
 
+
+  const edithandle = (item) => {
+    setProducts(item)
+  }
+  // update product
+  const updateProduct = async (item) => {
+    setLoading(true)
+    try {
+      await setDoc(doc(fireDB, "products", products.id), products);
+      toast.success("Product Updated successfully")
+      getProductData();
+      setLoading(false)
+      setTimeout(()=>{
+      window.location.href = '/dashboard'
+      },800)
+    } catch (error) {
+      setLoading(false)
+      console.log(error)
+    }
+    setProducts("")
+  }
+
+  const deleteProduct = async (item) => {
+
+    try {
+      setLoading(true)
+      await deleteDoc(doc(fireDB, "products", item.id));
+      toast.success('Product Deleted successfully')
+      setLoading(false)
+      getProductData()
+    } catch (error) {
+      // toast.success('Product Deleted Falied')
+      setLoading(false)
+    }
+  }
 
   return (
     <MyContext.Provider value={{ 
