@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import MyContext from './myContext';
 import { fireDB } from '../../firebase/FirebaseConfig';
 // import {fireDB} from '../../firebase/FirsbaseConfig'
+import { setDoc, doc, deleteDoc } from 'firebase/firestore';
 import { Timestamp, addDoc, collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 
@@ -92,11 +93,11 @@ function MyState(props) {
     getProductData();
   }, []);
 
+  // update product
 
   const edithandle = (item) => {
     setProducts(item)
   }
-  // update product
   const updateProduct = async (item) => {
     setLoading(true)
     try {
@@ -131,8 +132,10 @@ function MyState(props) {
   return (
     <MyContext.Provider value={{ 
       mode, toggleMode, loading,setLoading,
-      products, setProducts,addProduct }}>
-      {props.children}
+      products, setProducts,addProduct,product,
+      edithandle,updateProduct,deleteProduct
+      }}>
+       {props.children}
     </MyContext.Provider>
   )
 }
